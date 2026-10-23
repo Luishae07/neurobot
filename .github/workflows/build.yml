@@ -1,0 +1,29 @@
+name: Build NeuroBot (.geode)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: geode-sdk/build-geode-mod@main
+        with:
+          sdk: given
+          target: Win64
+      - run: ls build
+        shell: bash
+      - uses: actions/upload-artifact@v4
+        with:
+          name: neurobot-geode
+          path: build/*.geode
+      - name: Publish the "latest" release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view latest >/dev/null 2>&1 || gh release create latest --title "NeuroBot" --notes "Drop the .geode file into your Geode mods folder."
+          gh release upload latest build/*.geode --clobber
