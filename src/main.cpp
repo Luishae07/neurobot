@@ -174,11 +174,10 @@ class $modify(NeuroLayer, PlayLayer) {
         f->label->setVisible(active);
         if (!active) return;
 
-        if (f->dead) { // the attempt is over: start the next network straight away
+        if (f->dead) { // the attempt is over: wait for the game's own restart, then the next network plays
+            if (m_player1->m_isDead) return;
             f->dead = false;
             f->holding = false;
-            resetLevel();
-            return;
         }
         if (m_player1->m_isDead) return;
 
