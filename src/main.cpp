@@ -122,8 +122,8 @@ class $modify(NeuroLayer, PlayLayer) {
         m_uiLayer->addChild(f->draw);
         f->label = CCLabelBMFont::create("", "chatFont.fnt");
         f->label->setAnchorPoint({0.f, 1.f});
-        f->label->setScale(0.55f);
-        f->label->setPosition({8.f, size.height - 6.f});
+        f->label->setScale(0.28f);
+        f->label->setPosition({4.f, size.height - 3.f});
         f->label->setZOrder(1001);
         m_uiLayer->addChild(f->label);
         applySpeed();
@@ -187,8 +187,8 @@ class $modify(NeuroLayer, PlayLayer) {
         std::vector<float> acts[NL];
         forward(g_evo.pop[g_evo.cur], in, acts);
         bool jump = acts[NL - 1][0] > 0.f;
-        if (jump && !f->holding) { m_player1->pushButton(PlayerButton::Jump); f->holding = true; }
-        else if (!jump && f->holding) { m_player1->releaseButton(PlayerButton::Jump); f->holding = false; }
+        if (jump && !f->holding) { handleButton(true, 1, true); f->holding = true; }
+        else if (!jump && f->holding) { handleButton(false, 1, true); f->holding = false; }
 
         f->label->setString(fmt::format("NeuroBot  generation {}  network {}/{}  best this generation {:.0f}  best ever {:.0f}",
             g_evo.gen, g_evo.cur + 1, POP, g_evo.bestGen, g_evo.bestEver).c_str());
@@ -199,15 +199,15 @@ class $modify(NeuroLayer, PlayLayer) {
     void drawNet(std::vector<float> acts[NL]) {
         auto f = m_fields.self();
         auto size = CCDirector::get()->getWinSize();
-        const float W = 300.f, H = 190.f, x0 = 8.f, y0 = size.height - 34.f - H;
+        const float W = 150.f, H = 95.f, x0 = 4.f, y0 = size.height - 14.f - H;
         f->draw->clear();
         CCPoint box[4] = {{x0, y0}, {x0 + W, y0}, {x0 + W, y0 + H}, {x0, y0 + H}};
-        f->draw->drawPolygon(box, 4, ccc4f(0.f, 0.f, 0.f, 0.55f), 1.f, ccc4f(1.f, 1.f, 1.f, 0.25f));
+        f->draw->drawPolygon(box, 4, ccc4f(0.f, 0.f, 0.f, 0.55f), 0.5f, ccc4f(1.f, 1.f, 1.f, 0.25f));
 
         auto pos = [&](int l, int i) {
-            float x = x0 + 22.f + (W - 44.f) * l / (NL - 1);
-            float step = (H - 24.f) / std::max(1, LAYERS[l]);
-            float y = y0 + H / 2.f + ((LAYERS[l] - 1) / 2.f - i) * std::min(step, 16.f);
+            float x = x0 + 11.f + (W - 22.f) * l / (NL - 1);
+            float step = (H - 12.f) / std::max(1, LAYERS[l]);
+            float y = y0 + H / 2.f + ((LAYERS[l] - 1) / 2.f - i) * std::min(step, 8.f);
             return CCPoint{x, y};
         };
         const auto& g = g_evo.pop[g_evo.cur];
@@ -217,7 +217,7 @@ class $modify(NeuroLayer, PlayLayer) {
                 for (int i = 0; i < LAYERS[l]; i++) {
                     float w = g.w[p + i], a = std::abs(w * acts[l][i]);
                     float al = std::clamp(0.06f + a * 0.5f, 0.f, 0.9f);
-                    f->draw->drawSegment(pos(l, i), pos(l + 1, o), 0.4f + std::min(a, 1.5f) * 0.5f,
+                    f->draw->drawSegment(pos(l, i), pos(l + 1, o), 0.2f + std::min(a, 1.5f) * 0.25f,
                         w >= 0 ? ccc4f(0.3f, 0.9f, 0.5f, al) : ccc4f(1.f, 0.35f, 0.3f, al));
                 }
                 p += LAYERS[l] + 1;
@@ -228,7 +228,7 @@ class $modify(NeuroLayer, PlayLayer) {
                 float a = std::clamp(acts[l][i], -1.f, 1.f);
                 float v = (a + 1.f) / 2.f; // dark = -1, bright = +1
                 bool out = l == NL - 1;
-                f->draw->drawDot(pos(l, i), out ? 7.f : 4.5f,
+                f->draw->drawDot(pos(l, i), out ? 3.5f : 2.2f,
                     out ? ccc4f(v, v * 0.8f + 0.2f, 0.2f, 1.f) : ccc4f(0.15f + v * 0.85f, 0.2f + v * 0.7f, 0.35f + v * 0.65f, 1.f));
             }
     }
