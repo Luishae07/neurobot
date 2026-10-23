@@ -1,0 +1,37 @@
+{
+	"geode": "5.11.2",
+	"gd": {
+		"win": "2.2081",
+		"android": "2.2081",
+		"mac": "2.2081",
+		"ios": "2.2081"
+	},
+	"id": "luishae07.neurobot",
+	"name": "NeuroBot",
+	"version": "v1.0.0",
+	"developer": "Luishae07",
+	"description": "A neural network that learns to play the level. You see the network think, live.",
+	"settings": {
+		"enabled": {
+			"type": "bool",
+			"name": "Neural network plays",
+			"description": "Turn the learning bot on or off.",
+			"default": true
+		},
+		"show-network": {
+			"type": "bool",
+			"name": "Show the network",
+			"description": "Draw the network in the corner while it plays.",
+			"default": true
+		},
+		"speed": {
+			"type": "float",
+			"name": "Game speed",
+			"description": "Faster speed makes it learn faster.",
+			"default": 1.0,
+			"min": 0.5,
+			"max": 8.0,
+			"control": { "slider": true }
+		}
+	}
+}
